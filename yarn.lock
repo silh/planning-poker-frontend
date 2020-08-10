@@ -234,10 +234,10 @@
     webpack "^4.0.0"
     yorkie "^2.0.0"
 
-"@vue/cli-plugin-vuex@^4.4.6", "@vue/cli-plugin-vuex@~4.4.0":
-  version "4.4.6"
-  resolved "https://registry.yarnpkg.com/@vue/cli-plugin-vuex/-/cli-plugin-vuex-4.4.6.tgz#44b596f0d5236e0a2ce1aa4757bda5207c230be0"
-  integrity sha512-Ho0YzUivn8BLPqFoFypntR8CMTEXYYHVr0GdnZW99XL+DbGw75f+tJfnrV9UFHDTfvZt7uewKiXDMlrzQ0l3Ug==
+"@vue/cli-plugin-vuex@^4.4.6", "@vue/cli-plugin-vuex@~4.5.2":
+  version "4.5.2"
+  resolved "https://registry.yarnpkg.com/@vue/cli-plugin-vuex/-/cli-plugin-vuex-4.5.2.tgz#802db021bcc4afe0909492098aae8ea4b5e4b3cb"
+  integrity sha512-WAGx3WrhL78hpuwd1innSfflLuNkMiS3zz+sO8p1olhE9bLWdrIJ2jxHgrCCW6PFMwwY/h85GZNHUJvASPmvAQ==
 
 "@vue/cli-service@~4.4.6":
   version "4.4.6"
@@ -4264,7 +4264,7 @@ lodash.uniq@^4.5.0:
   resolved "https://registry.yarnpkg.com/lodash.uniq/-/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
   integrity sha1-0CJTc662Uq3BvILklFM5qEJ1R3M=
 
-lodash@^4.17.11, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.3:
+lodash@^4.17.11, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.16, lodash@^4.17.3:
   version "4.17.19"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.19.tgz#e48ddedbe30b3321783c5b4301fbd353bc1e4a4b"
   integrity sha512-JNvd8XER9GQX0v2qJgsaN/mzFCNA5BRe/j8JN9d+tWyGLSodKQHKFicdwNYzWwI3wjRnaKPsGj1XkBjx/F96DQ==
