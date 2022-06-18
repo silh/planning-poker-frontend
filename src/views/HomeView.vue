@@ -1,24 +1,16 @@
 <script setup>
-import CreateGame from "@/components/CreateGame.vue";
-import ListGamesNames from "@/components/ListGamesNames.vue";
-import { ref, onMounted } from "vue";
-import http from "../http-commons.js";
-
-const games = ref([]);
-
-const fetchGames = async () => {
-  let resp = await http.get("/games");
-  games.value = resp.data;
-};
-
-onMounted(fetchGames);
-
-const onGameCreated = fetchGames;
+import { RouterLink } from 'vue-router';
 </script>
 
 <template>
   <main>
-    <CreateGame @created="onGameCreated" />
-    <ListGamesNames :games="games" />
+    <div>
+      <RouterLink :to="{ name: 'create-game' }">
+        Create new poker game
+      </RouterLink>
+    </div>
+    <div>
+      <RouterLink to="games"> List all games </RouterLink>
+    </div>
   </main>
 </template>
