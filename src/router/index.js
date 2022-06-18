@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import CreateGameView from "../views/CreateGameView.vue";
+import GameView from "../views/GameView.vue";
 import HomeView from "../views/HomeView.vue";
 import ListGamesView from "../views/ListGamesView.vue";
 
@@ -21,6 +22,12 @@ const router = createRouter({
       name: "games",
       component: ListGamesView,
     },
+    {
+      path: "/games/:gameId",
+      name: "game",
+      component: GameView,
+      props: true,
+    }
   ],
 });
 
