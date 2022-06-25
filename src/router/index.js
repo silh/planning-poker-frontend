@@ -23,7 +23,7 @@ const router = createRouter({
       component: ListGamesView,
     },
     {
-      path: "/games/:gameId",
+      path: "/games/:gameId/:playerId", // TODO fix that, shoud be like this
       name: "game",
       component: GameView,
       props: true,
