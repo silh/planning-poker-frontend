@@ -25,8 +25,8 @@ async function send() {
   router.push({
     name: "game",
     params: {
-      gameId: createGameResp.data.id,
-      playerId: parseInt(createPlayerResp.data.id),
+      gameId: Number(createGameResp.data.id),
+      playerId: Number(createPlayerResp.data.id),
     },
   });
 }
