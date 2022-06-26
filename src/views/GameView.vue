@@ -8,6 +8,23 @@ const props = defineProps({
   playerId: String, // this is not desirable
 });
 
+const voteValues = [
+  "0",
+  "0.5",
+  "1",
+  "2",
+  "3",
+  "5",
+  "8",
+  "13",
+  "20",
+  "40",
+  "100",
+  "∞",
+  "?",
+  "☕",
+];
+
 const game = ref({});
 
 const fetchGame = async () => {
@@ -15,7 +32,9 @@ const fetchGame = async () => {
   game.value = resp.data;
 };
 
-const vote = async (v) => {
+const vote = async (e) => {
+  let v = e.target.textContent;
+  console.log(v);
   await http.post(`/games/${props.gameId}/vote`, {
     playerId: parseInt(props.playerId),
     vote: v,
@@ -34,10 +53,16 @@ onMounted(fetchGame);
       {{ player.name }} - {{ player.vote }}
     </div>
     <div>
-      <button @click="vote(1)">1</button>
-      <button @click="vote(2)">2</button>
+      <button
+        v-for="voteValue in voteValues"
+        v-bind:key="voteValue"
+        @click="vote($event)"
+      >
+        {{ voteValue }}
+      </button>
     </div>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+</style>
