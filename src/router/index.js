@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import CreateGameView from "../views/CreateGameView.vue";
 import GameView from "../views/GameView.vue";
 import HomeView from "../views/HomeView.vue";
+import JoinGameView from "../views/JoinGameView.vue";
 import ListGamesView from "../views/ListGamesView.vue";
 
 const router = createRouter({
@@ -27,7 +28,13 @@ const router = createRouter({
       name: "game",
       component: GameView,
       props: true,
-    }
+    },
+    {
+      path: "/games/:gameId/join",
+      name: "join-game",
+      component: JoinGameView,
+      props: true,
+    },
   ],
 });
 

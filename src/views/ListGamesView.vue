@@ -14,7 +14,21 @@ onMounted(fetchGames);
 
 <template>
   <div>
-    <div v-for="game in games" :key="game">{{ game }}</div>
+    <div v-if="games.length === 0">
+      There are no games at the moment.
+      <router-link :to="{ name: 'create-game' }">
+        Would you like to start one?
+      </router-link>
+    </div>
+    <div v-else>
+      <router-link
+        v-for="game in games"
+        v-bind:key="game.id"
+        :to="{ name: 'join-game', params: { gameId: game.id } }"
+      >
+        {{ game.name }}
+      </router-link>
+    </div>
   </div>
 </template>
 
