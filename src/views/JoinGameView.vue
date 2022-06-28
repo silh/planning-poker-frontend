@@ -2,6 +2,7 @@
 import http from "../http-commons.js";
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
+import { GameService } from "../services/GameService.js";
 
 const props = defineProps({
   gameId: String,
@@ -21,7 +22,7 @@ async function send() {
   let createPlayerResp = await http.post("/signup", {
     name: playerName.value,
   });
-  await http.put(`/games/${props.gameId}/join`, {
+  await GameService.put(props.gameId, {
     playerId: createPlayerResp.data.id,
   });
   router.push({
@@ -33,9 +34,8 @@ async function send() {
   });
 }
 
-const fetchGame = async () => { // TODO there is already a duplicate, extract it.
-  let resp = await http.get(`/games/${props.gameId}`);
-  game.value = resp.data;
+const fetchGame = async () => {
+  game.value = await GameService.get(props.gameId);
 };
 
 onMounted(fetchGame);

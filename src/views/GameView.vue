@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref } from "vue";
-import http from "../http-commons";
+import { GameService } from "../services/GameService";
 
 const props = defineProps({
   // both of the below are actually numbers, need to address that.
@@ -28,14 +28,11 @@ const voteValues = [
 const game = ref({});
 
 const fetchGame = async () => {
-  let resp = await http.get(`/games/${props.gameId}`);
-  game.value = resp.data;
+  game.value = await GameService.get(props.gameId);
 };
 
-const vote = async (e) => {
-  let v = e.target.textContent;
-  console.log(v);
-  await http.post(`/games/${props.gameId}/vote`, {
+const vote = async (v) => {
+  await GameService.vote(props.gameId, {
     playerId: parseInt(props.playerId),
     vote: v,
   });
@@ -56,7 +53,7 @@ onMounted(fetchGame);
       <button
         v-for="voteValue in voteValues"
         v-bind:key="voteValue"
-        @click="vote($event)"
+        @click="vote($event.target.textContent)"
       >
         {{ voteValue }}
       </button>
@@ -64,5 +61,4 @@ onMounted(fetchGame);
   </div>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

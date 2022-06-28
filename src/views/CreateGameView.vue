@@ -2,6 +2,7 @@
 import http from "../http-commons.js";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { GameService } from "../services/GameService.js";
 
 const router = useRouter();
 
@@ -18,14 +19,14 @@ async function send() {
   let createPlayerResp = await http.post("/signup", {
     name: playerName.value,
   });
-  let createGameResp = await http.post("/games", {
+  let createGameResp = await GameService.create({
     gameName: gameName.value,
     creatorId: createPlayerResp.data.id,
   });
   router.push({
     name: "game",
     params: {
-      gameId: Number(createGameResp.data.id),
+      gameId: Number(createGameResp.id),
       playerId: Number(createPlayerResp.data.id),
     },
   });
