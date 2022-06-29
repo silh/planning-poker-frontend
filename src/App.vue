@@ -1,10 +1,17 @@
 <script setup>
 import { RouterView } from "vue-router";
+import { useUserStore } from "./stores/user";
+
+const userStore = useUserStore();
 </script>
 
 <template>
   <header>
-    <router-link to="/"> Home</router-link>
+    <router-link to="/">Home</router-link>
+    <div v-if="userStore.currentUser">
+      Logged in as {{ userStore.currentUser.name }}.
+      <a @click="userStore.logout">Log out</a>
+    </div>
   </header>
   <RouterView to="home" />
 </template>
