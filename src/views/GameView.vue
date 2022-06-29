@@ -1,12 +1,17 @@
 <script setup>
 import { onMounted, ref } from "vue";
+import { useRouter } from "vue-router";
 import { GameService } from "../services/GameService";
+import { useUserStore } from "../stores/user";
 
 const props = defineProps({
   // both of the below are actually numbers, need to address that.
   gameId: String,
-  playerId: String, // this is not desirable
 });
+
+const router = useRouter();
+
+const userStore = useUserStore();
 
 const voteValues = [
   "0",
@@ -33,13 +38,19 @@ const fetchGame = async () => {
 
 const vote = async (v) => {
   await GameService.vote(props.gameId, {
-    playerId: parseInt(props.playerId),
+    playerId: parseInt(userStore.currentUser.id),
     vote: v,
   });
   await fetchGame();
 };
 
-onMounted(fetchGame);
+onMounted(async () => {
+  if (!userStore.currentUser) {
+    router.push({ name: "create-game" });
+    return;
+  }
+  fetchGame();
+});
 </script>
 
 <template>
@@ -47,7 +58,8 @@ onMounted(fetchGame);
     <div>Game: {{ game.name }}</div>
     <div>Players:</div>
     <div v-for="player in game.players" :key="player">
-      {{ player.name }} - {{ player.vote }}
+      {{ player.id === userStore.currentUser.id ? "You" : player.name }} -
+      {{ player.vote }}
     </div>
     <div>
       <button

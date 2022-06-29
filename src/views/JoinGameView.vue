@@ -1,44 +1,55 @@
 <script setup>
-import http from "../http-commons.js";
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { GameService } from "../services/GameService.js";
+import { useUserStore } from "../stores/user.js";
+import { UserService } from "../services/UserService.js";
 
 const props = defineProps({
   gameId: String,
 });
 const router = useRouter();
+const userStore = useUserStore();
 
 const game = ref({});
 const playerName = ref("");
 
 const error = ref("");
 
-async function send() {
+const routeToGame = async () => {
+  router.push({
+    name: "game",
+    params: { gameId: Number(props.gameId) },
+  });
+};
+
+const send = async () => {
   if (!playerName.value) {
     error.value = "Player name cannot be empty.";
     return;
   }
-  let createPlayerResp = await http.post("/signup", {
+  const user = await UserService.signup({
     name: playerName.value,
   });
-  await GameService.put(props.gameId, {
-    playerId: createPlayerResp.data.id,
+  userStore.save(user);
+  await GameService.join(props.gameId, {
+    playerId: userStore.currentUser.id,
   });
-  router.push({
-    name: "game",
-    params: {
-      gameId: Number(props.gameId),
-      playerId: Number(createPlayerResp.data.id),
-    },
-  });
-}
+  routeToGame();
+};
 
 const fetchGame = async () => {
   game.value = await GameService.get(props.gameId);
 };
 
-onMounted(fetchGame);
+onMounted(async () => {
+  // this can probably be part of the logic in a place which routes to this page
+  if (userStore.currentUser) {
+    routeToGame();
+    return;
+  }
+  fetchGame();
+});
 </script>
 
 <template>
