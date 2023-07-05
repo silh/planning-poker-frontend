@@ -21,6 +21,7 @@ onMounted(fetchGames);
       </router-link>
     </div>
     <div v-else>
+      We are here
       <router-link
         v-for="game in games"
         v-bind:key="game.id"

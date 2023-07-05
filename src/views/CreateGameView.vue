@@ -19,7 +19,7 @@ async function send() {
       error.value = "Player name cannot be empty.";
       return;
     }
-    const user = await UserService.signup(playerName);
+    const user = await UserService.create(playerName.value);
     userStore.save(user); // TODO maybe that should be part of the action itself?
   }
   if (!gameName.value) {

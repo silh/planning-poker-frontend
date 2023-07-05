@@ -28,7 +28,7 @@ const send = async () => {
     error.value = "Player name cannot be empty.";
     return;
   }
-  const user = await UserService.signup(playerName.value);
+  const user = await UserService.create(playerName.value);
   userStore.save(user);
   await GameService.join(props.gameId, {
     playerId: userStore.currentUser.id,
