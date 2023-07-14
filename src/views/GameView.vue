@@ -5,8 +5,8 @@ import { GameService } from "../services/GameService";
 import { useUserStore } from "../stores/user";
 
 const props = defineProps({
-  // both of the below are actually numbers, need to address that.
   gameId: String,
+  playerId: String,
 });
 
 const router = useRouter();
@@ -32,24 +32,29 @@ const voteValues = [
 
 const game = ref({});
 
-const fetchGame = async () => {
-  game.value = await GameService.get(props.gameId);
-};
-
 const vote = async (v) => {
   await GameService.vote(props.gameId, {
     playerId: parseInt(userStore.currentUser.id),
     vote: v,
   });
-  await fetchGame();
 };
+
+let ws;
 
 onMounted(async () => {
   if (!userStore.currentUser) {
     router.push({ name: "create-game" });
     return;
   }
-  fetchGame();
+  ws = new WebSocket("ws://localhost:8080/ws");
+  ws.onopen = (event) => {
+    console.log(`Connected: ${event}`);
+  };
+
+  ws.onmessage = (event) => {
+    console.log(`Received a message: ${event}`);
+  };
+  // ws.
 });
 </script>
 

@@ -26,13 +26,17 @@ async function send() {
     error.value = "Game name cannot be empty.";
     return;
   }
+  const userId = userStore.currentUser.id;
   const game = await GameService.create({
     gameName: gameName.value,
-    creatorId: userStore.currentUser.id,
+    creatorId: userId,
   });
   router.push({
     name: "game",
-    params: { gameId: game.id },
+    params: {
+      gameId: game.id,
+      playerId: userId,
+    },
   });
 }
 </script>

@@ -19,7 +19,10 @@ const error = ref("");
 const routeToGame = async () => {
   router.push({
     name: "game",
-    params: { gameId: Number(props.gameId) },
+    params: {
+      gameId: props.gameId,
+      playerId: userStore.currentUser.id,
+    },
   });
 };
 
@@ -28,16 +31,9 @@ const send = async () => {
     error.value = "Player name cannot be empty.";
     return;
   }
-  const user = await UserService.create(playerName.value);
-  userStore.save(user);
-  await GameService.join(props.gameId, {
-    playerId: userStore.currentUser.id,
-  });
+  const newUser = await UserService.create(playerName.value);
+  userStore.save(newUser);
   routeToGame();
-};
-
-const fetchGame = async () => {
-  game.value = await GameService.get(props.gameId);
 };
 
 onMounted(async () => {
@@ -46,7 +42,6 @@ onMounted(async () => {
     routeToGame();
     return;
   }
-  fetchGame();
 });
 </script>
 
