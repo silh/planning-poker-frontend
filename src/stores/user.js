@@ -16,13 +16,11 @@ export const useUserStore = defineStore({
           localStorage.user = undefined;
         }
       }
-      console.log(`get ${JSON.stringify(state.user)}`);
       return state.user;
     },
   },
   actions: {
     save(user) {
-      console.log(`set ${user}`);
       this.user = user;
       localStorage.user = JSON.stringify(user);
     },

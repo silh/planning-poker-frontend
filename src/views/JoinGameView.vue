@@ -19,10 +19,7 @@ const error = ref("");
 const routeToGame = async () => {
   router.push({
     name: "game",
-    params: {
-      gameId: props.gameId,
-      playerId: userStore.currentUser.id,
-    },
+    params: { gameId: props.gameId },
   });
 };
 

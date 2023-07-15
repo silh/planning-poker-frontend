@@ -1,12 +1,11 @@
 <script setup>
-import { onMounted, ref } from "vue";
+import { onUnmounted, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
-import { GameService } from "../services/GameService";
 import { useUserStore } from "../stores/user";
+import { GameService } from "../services/GameService";
 
 const props = defineProps({
   gameId: String,
-  playerId: String,
 });
 
 const router = useRouter();
@@ -32,45 +31,82 @@ const voteValues = [
 
 const game = ref({});
 
-const vote = async (v) => {
-  await GameService.vote(props.gameId, {
-    playerId: parseInt(userStore.currentUser.id),
-    vote: v,
-  });
+let ws; // WebSocket
+const vote = (value) => {
+  ws.send(
+    JSON.stringify({
+      channel: "vote",
+      vote: value,
+    })
+  );
 };
-
-let ws;
 
 onMounted(async () => {
   if (!userStore.currentUser) {
     router.push({ name: "create-game" });
     return;
   }
-  ws = new WebSocket("ws://localhost:8080/ws");
-  ws.onopen = (event) => {
-    console.log(`Connected: ${event}`);
+  game.value = await GameService.get(props.gameId);
+  ws = new WebSocket(`ws://${window.location.host}/ws`);
+  ws.onopen = () => {
+    ws.send(
+      JSON.stringify({
+        channel: "join",
+        gameId: props.gameId,
+        playerId: userStore.currentUser.id,
+      })
+    );
   };
 
   ws.onmessage = (event) => {
-    console.log(`Received a message: ${event}`);
+    const data = JSON.parse(event.data);
+    switch (data.channel) {
+      case "join": {
+        const newPlayer = data.player;
+        game.value.players[newPlayer.id] = newPlayer;
+        break;
+      }
+      case "leave": {
+        delete game.value.players[data.playerId];
+        break;
+      }
+      case "vote": {
+        game.value.votes[data] = data.vote;
+        break;
+      }
+      default:
+        console.log(`Received a message: ${JSON.stringify(event)}`);
+    }
   };
-  // ws.
+});
+
+onUnmounted(async () => {
+  if (ws) {
+    ws.close();
+  }
 });
 </script>
 
 <template>
   <div v-if="game">
     <div>Game: {{ game.name }}</div>
-    <div>Players:</div>
-    <div v-for="player in game.players" :key="player">
-      {{ player.id === userStore.currentUser.id ? "You" : player.name }} -
-      {{ player.vote }}
+    <div v-if="game.players">
+      <div>Players:</div>
+      <div
+        v-for="[playerId, player] in Object.entries(game.players)"
+        :key="playerId"
+      >
+        {{ player.name }}
+        {{ player.id === userStore.currentUser.id ? "(You)" : "" }}, vote:
+        {{ game.votes[playerId] ?? "-" }}
+      </div>
     </div>
+
     <div>
       <button
         v-for="voteValue in voteValues"
         v-bind:key="voteValue"
-        @click="vote($event.target.textContent)"
+        @click="vote(voteValue)"
       >
         {{ voteValue }}
       </button>

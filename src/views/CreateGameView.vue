@@ -33,10 +33,7 @@ async function send() {
   });
   router.push({
     name: "game",
-    params: {
-      gameId: game.id,
-      playerId: userId,
-    },
+    params: { gameId: game.id },
   });
 }
 </script>
