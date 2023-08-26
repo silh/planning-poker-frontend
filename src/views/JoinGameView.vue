@@ -39,12 +39,13 @@ onMounted(async () => {
     routeToGame();
     return;
   }
+  game.value = await GameService.get(props.gameId);
 });
 </script>
 
 <template>
   <main>
-    <div>Join a game '{{ game.name }}'.</div>
+    <div>Join a game {{ game.name }}.</div>
     <div>
       <label id="player-name">Player name:</label>
       <input v-model="playerName" id="player-name" />

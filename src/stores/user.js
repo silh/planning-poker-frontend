@@ -7,13 +7,11 @@ export const useUserStore = defineStore({
   }),
   getters: {
     currentUser: (state) => {
-      if (!state.user && localStorage.user) {
+      if (!state.user && localStorage.getItem("user")) {
         try {
-          if (localStorage.user) {
-            state.user = JSON.parse(localStorage.user);
-          }
+          state.user = JSON.parse(localStorage.getItem("user"));
         } catch (e) {
-          localStorage.user = undefined;
+          localStorage.removeItem("user");
         }
       }
       return state.user;
@@ -22,11 +20,11 @@ export const useUserStore = defineStore({
   actions: {
     save(user) {
       this.user = user;
-      localStorage.user = JSON.stringify(user);
+      localStorage.setItem("user", JSON.stringify(user));
     },
     logout() {
       this.user = undefined;
-      localStorage.user = undefined;
-    }
+      localStorage.removeItem("user");
+    },
   },
 });

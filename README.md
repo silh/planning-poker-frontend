@@ -1,6 +1,6 @@
 # planning-poker-frontend
 
-Frontend for gpoker.
+Frontend for planning poker.
 
 ## Recommended IDE Setup
 

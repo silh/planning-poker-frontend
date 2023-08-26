@@ -29,14 +29,36 @@ const voteValues = [
   "☕",
 ];
 
+// TODO this should be a enum
+// const gameStates = ["NOT_STARTED", "VOTING", "DISCUSSION", "FINISHED"];
+const nextStateMap = new Map();
+nextStateMap["NOT_STARTED"] = "VOTING";
+nextStateMap["VOTING"] = "DISCUSSION";
+nextStateMap["DISCUSSION"] = "NOT_STARTED";
+
 const game = ref({});
+let localVote; // We will keep a vote in this place to be able to show our vote event though the actual vote event doesn't have it
 
 let ws; // WebSocket
+
+// functions
 const vote = (value) => {
+  localVote = value;
   ws.send(
     JSON.stringify({
       channel: "vote",
       vote: value,
+    })
+  );
+};
+
+const toNextState = () => {
+  // TODO this is unsafe
+  const nextState = nextStateMap[game.value.state];
+  ws.send(
+    JSON.stringify({
+      channel: "transition",
+      nextState,
     })
   );
 };
@@ -71,7 +93,21 @@ onMounted(async () => {
         break;
       }
       case "vote": {
-        game.value.votes[data] = data.vote;
+        // We know the vote value for ourselves and can set it here
+        // even though the event doesn't have the actual value
+        // it might be better to move that logic to the backend
+        if (data.playerId == userStore.currentUser.id) {
+          game.value.votes[data.playerId] = localVote;
+          localVote = undefined;
+        } else {
+          game.value.votes[data.playerId] = "*";
+        }
+        break;
+      }
+      case "transition": {
+        localVote = undefined; // clean on any transition
+        game.value.state = data.targetState;
+        game.value.votes = data.votes;
         break;
       }
       default:
@@ -110,6 +146,10 @@ onUnmounted(async () => {
       >
         {{ voteValue }}
       </button>
+    </div>
+
+    <div>
+      <button @click="toNextState">To {{ nextStateMap[game.state] }}</button>
     </div>
   </div>
 </template>
