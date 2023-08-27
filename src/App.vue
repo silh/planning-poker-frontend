@@ -1,8 +1,20 @@
 <script setup>
-import { RouterView } from "vue-router";
+import { onMounted } from "vue";
+import { RouterView, useRouter } from "vue-router";
 import { useUserStore } from "./stores/user";
+import { UserService } from "./services/UserService";
 
+const router = useRouter();
 const userStore = useUserStore();
+
+onMounted(async () => {
+  try {
+    await UserService.get(userStore.currentUser.id);
+  } catch (e) {
+    userStore.logout();
+    router.push({ name: "home" });
+  }
+});
 </script>
 
 <template>

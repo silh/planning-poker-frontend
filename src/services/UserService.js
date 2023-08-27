@@ -6,6 +6,6 @@ export class UserService {
   }
 
   static async get(id) {
-    return (await http.post(`/users/${id}`)).data;
+    return (await http.get(`/users/${id}`)).data;
   }
 }
